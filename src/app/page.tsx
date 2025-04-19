@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from 'react';
 import Navbar from '@/components/Navbar'
 import { useCounter } from '@/hooks/useCounter';
+import SlidingPartners from '@/components/SlidingPartners';
 
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -811,71 +812,7 @@ export default function Home() {
       </section>
 
       {/* Partners Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <p className="text-sm font-medium text-[#6366F1] mb-2">İş Ortaklarımız</p>
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold">
-              <span className="text-[#27285C]">Bizi ilham veren </span>
-              <span className="text-[#6366F1]">ortaklarımız</span>
-            </h2>
-            <h3 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#6366F1] mt-2">
-              sürekli başarıya götürüyor
-            </h3>
-          </div>
-
-          {/* Partner Logos */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center justify-items-center">
-            {/* ChatBot */}
-            <div className="grayscale hover:grayscale-0 transition-all duration-300 hover:scale-110">
-              <span className="text-[#6366F1] text-lg">ChatBot</span>
-            </div>
-
-            {/* Synitel */}
-            <div className="grayscale hover:grayscale-0 transition-all duration-300 hover:scale-110">
-              <span className="text-[#6366F1] text-lg">Synitel</span>
-            </div>
-
-            {/* Xtreme Digital */}
-            <div className="grayscale hover:grayscale-0 transition-all duration-300 hover:scale-110">
-              <span className="text-[#6366F1] text-lg">Xtreme Digital</span>
-            </div>
-
-            {/* Slack */}
-            <div className="grayscale hover:grayscale-0 transition-all duration-300 hover:scale-110">
-              <span className="text-[#6366F1] text-lg">Slack</span>
-            </div>
-
-            {/* BidFire */}
-            <div className="grayscale hover:grayscale-0 transition-all duration-300 hover:scale-110">
-              <span className="text-[#6366F1] text-lg">BidFire</span>
-            </div>
-
-            {/* Repl.it */}
-            <div className="grayscale hover:grayscale-0 transition-all duration-300 hover:scale-110">
-              <span className="text-[#6366F1] text-lg">Repl.it</span>
-            </div>
-          </div>
-
-          {/* Client Count */}
-          <div className="text-center mt-16">
-            <p className="text-xl text-gray-600">
-              Dünya genelinde <span className="text-[#27285C] font-bold text-2xl">75.000+ Müşteri</span>
-            </p>
-            <button className="mt-8 inline-flex items-center group text-[#6366F1] font-semibold hover:text-[#27285C] transition-colors duration-300">
-              <span>Hemen Hizmet Alın</span>
-              <svg 
-                className="ml-2 w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </section>
+      <SlidingPartners />
 
       {/* Footer Section */}
       <footer className="bg-white py-16 w-full">
