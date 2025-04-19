@@ -166,7 +166,7 @@ export default function Home() {
       {/* Overlay */}
       {isSignupOpen && (
         <div 
-          className="fixed inset-0 bg-white/30 backdrop-blur-md z-40"
+          className="fixed inset-0 bg-white/50 backdrop-blur-xl md:bg-white/30 md:backdrop-blur-lg z-40"
           onClick={() => setIsSignupOpen(false)}
         ></div>
       )}

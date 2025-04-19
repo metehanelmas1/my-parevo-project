@@ -41,9 +41,10 @@ export default function SlidingPartners() {
           </h2>
         </div>
 
+        {/* Desktop View */}
         <div 
           ref={containerRef}
-          className="flex items-center gap-12 overflow-x-hidden"
+          className="hidden md:flex items-center gap-12 overflow-x-hidden"
         >
           {/* First set of partners */}
           <div className="flex items-center gap-12 animate-slide">
@@ -80,6 +81,18 @@ export default function SlidingPartners() {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Mobile View */}
+        <div className="md:hidden grid grid-cols-2 gap-6">
+          {partners.map((partner, index) => (
+            <div 
+              key={`mobile-${index}`}
+              className="flex items-center justify-center p-4 grayscale hover:grayscale-0 transition-all duration-300 hover:scale-105"
+            >
+              <span className="text-[#6366F1] text-xl font-semibold text-center">{partner}</span>
+            </div>
+          ))}
         </div>
       </div>
 
