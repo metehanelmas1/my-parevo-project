@@ -11,6 +11,8 @@ export default function Home() {
   const [isSignupOpen, setIsSignupOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const statsRef = useRef<HTMLDivElement>(null);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
   const monthlyIncrease = useCounter(isVisible ? 93.7 : 0, 2000);
   const revenue = useCounter(isVisible ? 50 : 0, 2000);
@@ -62,6 +64,32 @@ export default function Home() {
 
   const prevSlide = () => {
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe) {
+      nextSlide();
+    }
+    if (isRightSwipe) {
+      prevSlide();
+    }
+
+    setTouchStart(null);
+    setTouchEnd(null);
   };
 
   return (
@@ -266,10 +294,6 @@ export default function Home() {
                 <p className="text-white/80 text-sm sm:text-base mb-6">
                   Ücretsiz demo için bizimle iletişime geçin. 30 gün koşulsuz geri ödeme garantisi sunuyoruz.
                 </p>
-                
-                <button className="inline-flex items-center justify-center bg-[#27285C] text-white px-8 py-3 rounded-lg font-medium hover:bg-[#6366F1] transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1">
-                  <span className="text-white">DAHA FAZLA BİLGİ</span>
-                </button>
               </div>
             </div>
           </div>
@@ -277,79 +301,99 @@ export default function Home() {
       </div>
 
       {/* Achievement Section */}
-      <section className="relative bg-[#1e2756] py-16">
-        <div className="container mx-auto px-4">
+      <section className="relative bg-[#1e2756] py-8 md:py-12 mt-16">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#1e2756] to-[#2a3a6e] transform -skew-y-3"></div>
+        <div className="container mx-auto px-4 relative">
           {/* Image Carousel */}
-          <div className="relative mb-12 h-[300px] md:h-[400px] overflow-hidden rounded-lg">
+          <div 
+            className="relative mb-8 md:mb-12 h-[350px] md:h-[500px] w-[350px] md:w-[500px] mx-auto overflow-hidden rounded-2xl group shadow-2xl -mt-24 z-20"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
+            {/* Gradient Overlays */}
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/40 z-10"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent z-10"></div>
+            <div className="absolute inset-0 bg-gradient-to-l from-black/20 to-transparent z-10"></div>
+
+            {/* Navigation Buttons */}
             <button
               onClick={prevSlide}
-              className="absolute left-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-orange-500 p-2 text-white hover:bg-orange-600"
+              className="absolute left-4 top-1/2 z-20 -translate-y-1/2 rounded-full bg-white/10 p-2.5 text-white backdrop-blur-sm hover:bg-white/20 transition-all duration-300 opacity-0 group-hover:opacity-100"
               aria-label="Previous slide"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
             <button
               onClick={nextSlide}
-              className="absolute right-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-orange-500 p-2 text-white hover:bg-orange-600"
+              className="absolute right-4 top-1/2 z-20 -translate-y-1/2 rounded-full bg-white/10 p-2.5 text-white backdrop-blur-sm hover:bg-white/20 transition-all duration-300 opacity-0 group-hover:opacity-100"
               aria-label="Next slide"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </button>
+
+            {/* Slides */}
             {slides.map((slide, index) => (
               <div
                 key={index}
-                className={`absolute h-full w-full transition-opacity duration-500 ${
-                  index === currentSlide ? 'opacity-100' : 'opacity-0'
+                className={`absolute inset-0 transition-all duration-700 ease-in-out transform ${
+                  index === currentSlide 
+                    ? 'opacity-100 scale-100' 
+                    : 'opacity-0 scale-105'
                 }`}
               >
                 <img
                   src={slide}
                   alt={`Team slide ${index + 1}`}
-                  className="h-full w-full object-cover"
+                  className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
             ))}
+
+            {/* Slide Indicators */}
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+              {slides.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentSlide(index)}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    index === currentSlide ? 'bg-white w-4' : 'bg-white/50'
+                  }`}
+                />
+              ))}
+            </div>
           </div>
 
           {/* Achievement Content */}
-          <div className="text-center" ref={statsRef}>
-            <h2 className="mb-8 text-2xl font-bold text-white md:text-4xl">
+          <div className="text-center relative z-10" ref={statsRef}>
+            <h2 className="mb-6 text-xl font-bold text-white md:text-3xl animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 delay-200">
               Son 12 ayda başarıyla
-              <span className="block">tamamlanan projeler</span>
+              <span className="block mt-1 text-lg md:text-2xl text-white/80">tamamlanan projeler</span>
             </h2>
 
-            {/* Play Button */}
-            <button className="mb-12 flex items-center justify-center gap-2 rounded-full bg-orange-500 px-6 py-3 text-white mx-auto hover:bg-orange-600 transition-colors">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              Tanıtım Videosunu İzle
-            </button>
-
             {/* Statistics Grid */}
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-              <div className="text-center">
-                <div className="mb-2 text-4xl font-bold text-orange-500 md:text-5xl">
+            <div className="grid grid-cols-3 gap-4 md:gap-8 max-w-2xl mx-auto">
+              <div className="text-center animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 delay-400">
+                <div className="text-3xl md:text-4xl font-bold text-orange-500">
                   {isVisible ? `${Math.round(monthlyIncrease)}%` : '0%'}
                 </div>
-                <p className="text-gray-300">Aylık Artış</p>
+                <p className="text-sm md:text-base text-gray-300">Aylık Artış</p>
               </div>
-              <div className="text-center">
-                <div className="mb-2 text-4xl font-bold text-orange-500 md:text-5xl">
+              <div className="text-center animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 delay-500">
+                <div className="text-3xl md:text-4xl font-bold text-orange-500">
                   {isVisible ? `${Math.round(revenue)}B` : '0B'}
                 </div>
-                <p className="text-gray-300">Gelir</p>
+                <p className="text-sm md:text-base text-gray-300">Gelir</p>
               </div>
-              <div className="text-center">
-                <div className="mb-2 text-4xl font-bold text-orange-500 md:text-5xl">
+              <div className="text-center animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 delay-600">
+                <div className="text-3xl md:text-4xl font-bold text-orange-500">
                   {isVisible ? `${Math.round(downloads)}B` : '0B'}
                 </div>
-                <p className="text-gray-300">Toplam İndirme</p>
+                <p className="text-sm md:text-base text-gray-300">Toplam İndirme</p>
               </div>
             </div>
           </div>
